@@ -7,6 +7,7 @@ import {MyTicketsComponent} from './pages/my-tickets/my-tickets.component';
 import {OrganizerDashboardComponent} from './pages/organizer-dashboard/organizer-dashboard.component';
 import {EventFormComponent} from './pages/event-form/event-form.component';
 import {SalesCheckinsComponent} from './pages/sales-checkins/sales-checkins.component';
+import {CheckinScannerComponent} from './pages/checkin-scanner/checkin-scanner.component';
 
 export const routes: Routes = [
   {path: '', component: LandingComponent},
@@ -18,4 +19,5 @@ export const routes: Routes = [
   {path: 'create-event', component: EventFormComponent},
   {path: 'edit-event/:id', component: EventFormComponent},
   {path: 'sales-checkins', component: SalesCheckinsComponent},
+  {path: 'checkin-scanner', component: CheckinScannerComponent},
 ];

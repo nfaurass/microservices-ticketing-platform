@@ -1,0 +1,17 @@
+<section class="min-h-screen bg-gradient-to-br from-white via-slate-100 to-slate-200 text-slate-900 px-6 py-16">
+  <div class="container mx-auto max-w-xl text-center">
+    <h1 class="text-4xl font-bold mb-6">Check-In Scanner</h1>
+    <p class="text-slate-600 mb-8">Scan attendee QR codes to validate their entry.</p>
+    <zxing-scanner (scanSuccess)="handleScan($event)"
+                   class="rounded-lg overflow-hidden shadow-md w-full max-w-md mx-auto"></zxing-scanner>
+    <div class="mt-10 text-xl font-medium">
+      <div *ngIf="status === 'valid'" class="text-green-600">✅ Ticket Valid</div>
+      <div *ngIf="status === 'used'" class="text-yellow-600">⚠️ Ticket Already Used</div>
+      <div *ngIf="status === 'invalid'" class="text-red-600">❌ Invalid Ticket</div>
+      <div *ngIf="status === 'idle'" class="text-slate-500">Waiting for scan...</div>
+      <div *ngIf="result" class="mt-4 text-sm text-slate-500">
+        Code: <span class="font-mono">{{ result }}</span>
+      </div>
+    </div>
+  </div>
+</section>
