@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CommonModule, DatePipe, JsonPipe, NgOptimizedImage} from '@angular/common';
 
 interface TicketType {
@@ -30,7 +30,7 @@ interface EventDetail {
   standalone: true,
   styleUrl: './event-detail.component.css'
 })
-export class EventDetailComponent {
+export class EventDetailComponent implements OnInit {
   event: EventDetail | null = null;
   selectedTicketId: string | null = null;
   quantity: number = 1;
