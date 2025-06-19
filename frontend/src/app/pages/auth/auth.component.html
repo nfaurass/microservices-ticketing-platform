@@ -1,0 +1,54 @@
+<section
+  class="min-h-screen h-full bg-gradient-to-br from-white via-slate-100 to-slate-400 text-slate-900 flex flex-col font-sans">
+  <div
+    class="flex-1 h-full container mx-auto px-6 py-24 flex flex-col items-center justify-center text-center max-w-md">
+
+    <h1 class="text-4xl md:text-5xl mb-8 font-semibold">
+      Welcome Back
+    </h1>
+
+    <div class="flex justify-center mb-8 space-x-6 border-b border-slate-300">
+      <button (click)="activeTab = 'login'" [class.border-b-2]="activeTab === 'login'"
+              [class.border-slate-900]="activeTab === 'login'"
+              class="pb-2 text-lg cursor-pointer font-semibold hover:text-slate-700 transition">
+        Login
+      </button>
+      <button (click)="activeTab = 'register'" [class.border-b-2]="activeTab === 'register'"
+              [class.border-slate-900]="activeTab === 'register'"
+              class="pb-2 text-lg cursor-pointer font-semibold hover:text-slate-700 transition">
+        Register
+      </button>
+    </div>
+
+    <form *ngIf="activeTab === 'login'" class="w-full space-y-6" (ngSubmit)="onLogin()">
+      <input type="email" placeholder="Email"
+             class="w-full p-3 rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-700"
+             [(ngModel)]="loginData.email" name="loginEmail" required/>
+      <input type="password" placeholder="Password"
+             class="w-full p-3 rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-700"
+             [(ngModel)]="loginData.password" name="loginPassword" required/>
+      <button type="submit"
+              class="w-full bg-slate-900 text-white py-3 rounded-lg shadow-md hover:bg-slate-700 transition duration-300">
+        Login
+      </button>
+    </form>
+
+    <form *ngIf="activeTab === 'register'" class="w-full space-y-6" (ngSubmit)="onRegister()">
+      <input type="text" placeholder="Full Name"
+             class="w-full p-3 rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-700"
+             [(ngModel)]="registerData.name" name="registerName" required/>
+      <input type="email" placeholder="Email"
+             class="w-full p-3 rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-700"
+             [(ngModel)]="registerData.email" name="registerEmail" required/>
+      <input type="password" placeholder="Password"
+             class="w-full p-3 rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-700"
+             [(ngModel)]="registerData.password" name="registerPassword" required/>
+      <button type="submit"
+              class="w-full bg-slate-900 text-white py-3 rounded-lg shadow-md hover:bg-slate-700 transition duration-300">
+        Register
+      </button>
+    </form>
+
+  </div>
+
+</section>
