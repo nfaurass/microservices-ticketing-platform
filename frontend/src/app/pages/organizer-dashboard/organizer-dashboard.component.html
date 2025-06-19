@@ -1,0 +1,45 @@
+<section
+  class="min-h-screen bg-gradient-to-br from-white via-slate-100 to-slate-200 text-slate-900 px-6 py-16 font-sans">
+  <div class="container mx-auto max-w-6xl">
+    <h1 class="text-4xl font-bold mb-10">Organizer Dashboard</h1>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+      <div class="bg-white rounded-xl shadow p-6">
+        <p class="text-sm text-slate-500 mb-1">Total Events</p>
+        <p class="text-3xl font-semibold">{{ totalEvents }}</p>
+      </div>
+      <div class="bg-white rounded-xl shadow p-6">
+        <p class="text-sm text-slate-500 mb-1">Tickets Sold</p>
+        <p class="text-3xl font-semibold">{{ totalTicketsSold }}</p>
+      </div>
+      <div class="bg-white rounded-xl shadow p-6">
+        <p class="text-sm text-slate-500 mb-1">Total Revenue</p>
+        <p class="text-3xl font-semibold">${{ totalRevenue }}</p>
+      </div>
+    </div>
+    <div class="bg-white rounded-xl shadow p-6">
+      <h2 class="text-xl font-semibold mb-4">Recent Events</h2>
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-left">
+          <thead>
+          <tr class="border-b border-slate-200 text-slate-600 text-sm">
+            <th class="py-2 pr-4">Event</th>
+            <th class="py-2 pr-4">Date</th>
+            <th class="py-2 pr-4">Venue</th>
+            <th class="py-2 pr-4">Tickets Sold</th>
+            <th class="py-2">Revenue</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let event of recentEvents" class="border-b border-slate-100 hover:bg-slate-50 transition">
+            <td class="py-3 pr-4 font-medium text-slate-800">{{ event.title }}</td>
+            <td class="py-3 pr-4 text-slate-600">{{ event.date | date: 'mediumDate' }}</td>
+            <td class="py-3 pr-4 text-slate-600">{{ event.venue }}</td>
+            <td class="py-3 pr-4 text-slate-700">{{ event.ticketsSold }}</td>
+            <td class="py-3 text-slate-700">${{ event.revenue }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
