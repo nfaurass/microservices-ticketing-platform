@@ -1,0 +1,224 @@
+networks:
+  event-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
+  redis-data:
+  kafka-data:
+  zookeeper-data:
+
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper:3.4.6
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    volumes:
+      - zookeeper-data:/data
+    healthcheck:
+      test: [ "CMD", "echo", "ruok", "|", "nc", "localhost", "2181" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - event-network
+    restart: unless-stopped
+
+  kafka:
+    image: wurstmeister/kafka:2.13-2.8.0
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    volumes:
+      - kafka-data:/kafka
+    healthcheck:
+      test: [ "CMD", "kafka-topics.sh", "--list", "--bootstrap-server", "localhost:9092" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - event-network
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:5.0
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: [ "CMD", "mongo", "--eval", "db.adminCommand('ping')" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - event-network
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - event-network
+    restart: unless-stopped
+
+  auth-service:
+    build: ./services/auth-service
+    container_name: auth-service
+    ports:
+      - "3001:3001"
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    environment:
+      MONGO_URI: mongodb://mongo:27017/authdb
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      KAFKA_BROKER: kafka:9092
+      JWT_SECRET: your_jwt_secret_here
+      PORT: 3001
+    networks:
+      - event-network
+    restart: on-failure
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:3001/health || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  event-service:
+    build: ./services/event-service
+    container_name: event-service
+    ports:
+      - "3002:3002"
+    depends_on:
+      mongo:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    environment:
+      MONGO_URI: mongodb://mongo:27017/eventdb
+      KAFKA_BROKER: kafka:9092
+      PORT: 3002
+    networks:
+      - event-network
+    restart: on-failure
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:3002/health || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ticket-service:
+    build: ./services/ticket-service
+    container_name: ticket-service
+    ports:
+      - "3003:3003"
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    environment:
+      MONGO_URI: mongodb://mongo:27017/ticketdb
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      KAFKA_BROKER: kafka:9092
+      PORT: 3003
+    networks:
+      - event-network
+    restart: on-failure
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:3003/health || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  checkin-service:
+    build: ./services/checkin-service
+    container_name: checkin-service
+    ports:
+      - "3004:3004"
+    depends_on:
+      kafka:
+        condition: service_healthy
+    environment:
+      KAFKA_BROKER: kafka:9092
+      PORT: 3004
+    networks:
+      - event-network
+    restart: on-failure
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:3004/health || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pricing-engine:
+    build: ./services/pricing-engine
+    container_name: pricing-engine
+    ports:
+      - "3005:3005"
+    depends_on:
+      kafka:
+        condition: service_healthy
+    environment:
+      KAFKA_BROKER: kafka:9092
+      PORT: 3005
+    networks:
+      - event-network
+    restart: on-failure
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:3005/health || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      auth-service:
+        condition: service_healthy
+      event-service:
+        condition: service_healthy
+      ticket-service:
+        condition: service_healthy
+    networks:
+      - event-network
+    restart: on-failure
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
