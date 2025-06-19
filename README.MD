@@ -71,7 +71,7 @@ frequently accessed data like seat availability and event listings.
 
 | Tool/Framework    | Purpose                                 |
 |-------------------|-----------------------------------------|
-| **NestJS**        | Backend framework for each microservice |
+| **Express**       | Backend framework for each microservice |
 | **GraphQL**       | API schema and service communication    |
 | **MongoDB**       | Data persistence per service            |
 | **Redis**         | In-memory caching and session storage   |
