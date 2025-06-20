@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
 export interface TicketType {
+  _id?: string;
   name: string;
   price: number;
   available: number;
@@ -36,5 +37,9 @@ export class EventsService {
 
   getEvents(): Observable<Event[]> {
     return this.httpClient.get<Event[]>(this.API_URL + "/get");
+  }
+
+  getEvent(eventId: string): Observable<Event> {
+    return this.httpClient.get<Event>(this.API_URL + "/get/" + eventId);
   }
 }

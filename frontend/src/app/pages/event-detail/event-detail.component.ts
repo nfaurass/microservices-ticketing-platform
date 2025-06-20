@@ -1,23 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {CommonModule, DatePipe, JsonPipe, NgOptimizedImage} from '@angular/common';
-
-interface TicketType {
-  id: string;
-  name: string;
-  price: number;
-  available: number;
-  description?: string;
-}
-
-interface EventDetail {
-  id: string;
-  title: string;
-  date: string;
-  venue: string;
-  description: string;
-  imageUrl: string;
-  ticketTypes: TicketType[];
-}
+import {CommonModule, DatePipe, JsonPipe} from '@angular/common';
+import {EventsService, Event} from '../../events.service';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-event-detail',
@@ -31,39 +15,35 @@ interface EventDetail {
   styleUrl: './event-detail.component.css'
 })
 export class EventDetailComponent implements OnInit {
-  event: EventDetail | null = null;
+  event: Event | null = null;
   selectedTicketId: string | null = null;
   quantity: number = 1;
 
-  ngOnInit() {
-    this.event = {
-      id: '1',
-      title: 'Summer Music Festival 2025',
-      date: '2025-07-15',
-      venue: 'Central Park, NYC',
-      description: `Join us for an unforgettable day of live music, food trucks, and fun activities! Featuring top artists and DJs across multiple stages.`,
-      imageUrl: 'https://cdnv2.guichet.com/public/sliders/exyJisLjGXB29QUtnah5wTvHBz5jfjp75bsqUy83.jpg',
-      ticketTypes: [
-        {
-          id: 'general',
-          name: 'General Admission',
-          price: 50,
-          available: 150,
-          description: 'Access to all general areas and stages.',
-        },
-        {
-          id: 'vip',
-          name: 'VIP Pass',
-          price: 120,
-          available: 40,
-          description:
-            'Includes backstage access, premium seating, and complimentary drinks.',
-        },
-      ],
-    };
+  constructor(
+    private route: ActivatedRoute,
+    private eventsService: EventsService,
+    private router: Router
+  ) {
+  }
 
-    if (this.event.ticketTypes.length) {
-      this.selectedTicketId = this.event.ticketTypes[0].id;
+  ngOnInit(): void {
+    const eventId = this.route.snapshot.paramMap.get('id');
+    if (eventId) {
+      this.eventsService.getEvent(eventId).subscribe({
+        next: (data) => {
+          this.event = data;
+          if (this.event.ticketTypes.length > 0 && this.event.ticketTypes[0].ticketTypes.length > 0) {
+            this.selectedTicketId = this.event.ticketTypes[0].ticketTypes[0]._id || null;
+          }
+        },
+        error: (err) => {
+          console.error('Error loading event', err);
+          this.router.navigate(['/events']);
+        },
+      });
+    } else {
+      console.error('No event ID in route');
+      this.router.navigate(['/events']);
     }
   }
 
@@ -72,15 +52,22 @@ export class EventDetailComponent implements OnInit {
   }
 
   get totalPrice(): number {
-    const ticket = this.event?.ticketTypes.find(t => t.id === this.selectedTicketId);
-    return ticket ? ticket.price * this.quantity : 0;
+    if (!this.event || !this.selectedTicketId) return 0;
+    for (const ticketGroup of this.event.ticketTypes) {
+      const ticket = ticketGroup.ticketTypes.find(t => t._id === this.selectedTicketId);
+      if (ticket) return ticket.price * this.quantity;
+    }
+    return 0;
   }
 
   incrementQuantity() {
-    if (!this.event) return;
-    const ticket = this.event.ticketTypes.find(t => t.id === this.selectedTicketId);
-    if (ticket && this.quantity < ticket.available) {
-      this.quantity++;
+    if (!this.event || !this.selectedTicketId) return;
+    for (const ticketGroup of this.event.ticketTypes) {
+      const ticket = ticketGroup.ticketTypes.find(t => t._id === this.selectedTicketId);
+      if (ticket && this.quantity < ticket.available) {
+        this.quantity++;
+        return;
+      }
     }
   }
 
@@ -90,14 +77,16 @@ export class EventDetailComponent implements OnInit {
 
   onPurchase() {
     if (!this.selectedTicketId || !this.event) return;
-
-    const ticket = this.event.ticketTypes.find(t => t.id === this.selectedTicketId);
-    if (!ticket) return;
-
-    alert(
-      `Purchasing ${this.quantity} x ${ticket.name} ticket(s) for ${this.event.title} at $${ticket.price} each. Total: $${(
-        ticket.price * this.quantity
-      ).toFixed(2)}`
-    );
+    for (const ticketGroup of this.event.ticketTypes) {
+      const ticket = ticketGroup.ticketTypes.find(t => t._id === this.selectedTicketId);
+      if (ticket) {
+        alert(
+          `Purchasing ${this.quantity} x ${ticket.name} ticket(s) for ${this.event.title} at $${ticket.price} each. Total: $${(
+            ticket.price * this.quantity
+          ).toFixed(2)}`
+        );
+        return;
+      }
+    }
   }
 }
