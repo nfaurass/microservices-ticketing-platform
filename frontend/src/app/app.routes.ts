@@ -9,6 +9,7 @@ import {EventFormComponent} from './pages/event-form/event-form.component';
 import {SalesCheckinsComponent} from './pages/sales-checkins/sales-checkins.component';
 import {CheckinScannerComponent} from './pages/checkin-scanner/checkin-scanner.component';
 import {AuthGuard} from './guards/auth.guard';
+import {LayoutComponent} from './core/layout/layout.component';
 
 export const routes: Routes = [
   {
@@ -18,35 +19,50 @@ export const routes: Routes = [
     path: 'auth', component: AuthComponent
   },
   {
-    path: 'events', component: EventsComponent,
-    canActivate: [AuthGuard], data: {allowedRoles: ['attendee', 'organizer', 'venue']}
-  },
-  {
-    path: 'events/:id', component: EventDetailComponent,
-    canActivate: [AuthGuard], data: {allowedRoles: ['attendee', 'organizer', 'venue']}
-  },
-  {
-    path: 'my-tickets', component: MyTicketsComponent,
-    canActivate: [AuthGuard], data: {allowedRoles: ['attendee']}
-  },
-  {
-    path: 'organizer-dashboard', component: OrganizerDashboardComponent,
-    canActivate: [AuthGuard], data: {allowedRoles: ['organizer']}
-  },
-  {
-    path: 'create-event', component: EventFormComponent,
-    canActivate: [AuthGuard], data: {allowedRoles: ['organizer']}
-  },
-  {
-    path: 'edit-event/:id', component: EventFormComponent,
-    canActivate: [AuthGuard], data: {allowedRoles: ['organizer']}
-  },
-  {
-    path: 'sales-checkins', component: SalesCheckinsComponent,
-    canActivate: [AuthGuard], data: {allowedRoles: ['organizer']}
-  },
-  {
-    path: 'checkin-scanner', component: CheckinScannerComponent,
-    canActivate: [AuthGuard], data: {allowedRoles: ['venue']}
-  },
+    path: '',
+    component: LayoutComponent,
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'events',
+        component: EventsComponent,
+        data: {allowedRoles: ['attendee', 'organizer', 'venue']}
+      },
+      {
+        path: 'events/:id',
+        component: EventDetailComponent,
+        data: {allowedRoles: ['attendee', 'organizer', 'venue']}
+      },
+      {
+        path: 'my-tickets',
+        component: MyTicketsComponent,
+        data: {allowedRoles: ['attendee']}
+      },
+      {
+        path: 'organizer-dashboard',
+        component: OrganizerDashboardComponent,
+        data: {allowedRoles: ['organizer']}
+      },
+      {
+        path: 'create-event',
+        component: EventFormComponent,
+        data: {allowedRoles: ['organizer']}
+      },
+      {
+        path: 'edit-event/:id',
+        component: EventFormComponent,
+        data: {allowedRoles: ['organizer']}
+      },
+      {
+        path: 'sales-checkins',
+        component: SalesCheckinsComponent,
+        data: {allowedRoles: ['organizer']}
+      },
+      {
+        path: 'checkin-scanner',
+        component: CheckinScannerComponent,
+        data: {allowedRoles: ['venue']}
+      },
+    ]
+  }
 ];
