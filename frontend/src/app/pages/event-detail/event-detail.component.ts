@@ -69,7 +69,11 @@ export class EventDetailComponent implements OnInit {
 
   onSelectTicket(ticketId: string) {
     this.selectedTicketId = ticketId;
-    this.quantity = 1;
+  }
+
+  get totalPrice(): number {
+    const ticket = this.event?.ticketTypes.find(t => t.id === this.selectedTicketId);
+    return ticket ? ticket.price * this.quantity : 0;
   }
 
   incrementQuantity() {
