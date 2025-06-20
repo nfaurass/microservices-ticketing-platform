@@ -10,5 +10,5 @@ export async function publishEventCreated(data: EventAttrs) {
         persistent: true,
     });
 
-    console.log('📩 Published event.created event:', data);
+    console.log('[Event Service] 📩 Published event.created event:', data);
 }
