@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {DatePipe, NgForOf} from '@angular/common';
 import {EventsService, Event} from '../../events.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-events',
@@ -15,11 +16,11 @@ import {EventsService, Event} from '../../events.service';
 export class EventsComponent {
   events: Event[] = [];
 
-  constructor(private eventsService: EventsService) {
+  constructor(private eventsService: EventsService, private router: Router) {
   }
 
   onSelectEvent(event: Event) {
-    alert(`Selected event: ${event.title}`);
+    this.router.navigate(['/events', event._id]);
   }
 
   ngOnInit(): void {
