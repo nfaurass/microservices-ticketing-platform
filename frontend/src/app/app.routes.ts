@@ -8,13 +8,19 @@ import {OrganizerDashboardComponent} from './pages/organizer-dashboard/organizer
 import {EventFormComponent} from './pages/event-form/event-form.component';
 import {SalesCheckinsComponent} from './pages/sales-checkins/sales-checkins.component';
 import {CheckinScannerComponent} from './pages/checkin-scanner/checkin-scanner.component';
+import {AuthGuard} from './guards/auth.guard';
 
 export const routes: Routes = [
   {path: '', component: LandingComponent},
   {path: 'auth', component: AuthComponent},
   {path: 'events', component: EventsComponent},
   {path: 'events/:id', component: EventDetailComponent},
-  {path: 'my-tickets', component: MyTicketsComponent},
+  {
+    path: 'my-tickets',
+    component: MyTicketsComponent,
+    canActivate: [AuthGuard],
+    data: {allowedRoles: ['attendee']}
+  },
   {path: 'organizer-dashboard', component: OrganizerDashboardComponent},
   {path: 'create-event', component: EventFormComponent},
   {path: 'edit-event/:id', component: EventFormComponent},
