@@ -17,7 +17,7 @@ if (!(PORT && KAFKA_BROKER && MONGO_URI)) process.exit(1);
 
 const start = async () => {
     try {
-        await mongoose.connect(MONGO_URI + '/events');
+        await mongoose.connect(MONGO_URI + '/main');
         console.log('[Event Service] ✅ MongoDB connected');
 
         await connectRabbitMQ(KAFKA_BROKER);

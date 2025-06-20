@@ -18,7 +18,7 @@ if (!(PORT && MONGO_URI && JWT_SECRET)) process.exit(1);
 
 const start = async () => {
     try {
-        await mongoose.connect(MONGO_URI + '/auth');
+        await mongoose.connect(MONGO_URI + '/main');
         console.log('[Auth Service] ✅ MongoDB connected');
 
         app.get("/", (req: Request, res: Response) => {

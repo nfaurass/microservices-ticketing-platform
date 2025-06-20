@@ -21,7 +21,7 @@ export interface TicketAttrs {
 
 const ticketSchema = new mongoose.Schema(
     {
-        eventId: {type: String, required: true},
+        eventId: {type: mongoose.Schema.Types.ObjectId, ref: 'Event', required: true},
         ticketTypes: [
             {
                 name: {type: String, required: true},

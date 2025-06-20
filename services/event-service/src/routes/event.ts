@@ -13,4 +13,10 @@ router.post('/api/events/create', async (req, res) => {
     res.status(201).send(event);
 });
 
+router.get('/api/events/get', async (req, res) => {
+    // Simplified
+    const events = await Event.find().populate('ticketTypes');
+    res.status(200).send(events);
+})
+
 export {router as eventRouter};

@@ -1,5 +1,6 @@
 import {getChannel} from "../../rabbitmq/connection";
 import {EventType, Ticket} from "../../models/Ticket";
+import mongoose from "mongoose";
 
 export async function ticketCreatedListener() {
     const channel = getChannel();
@@ -11,7 +12,7 @@ export async function ticketCreatedListener() {
         if (msg !== null) {
             const data = JSON.parse(msg.content.toString()) as EventType;
             console.log('[Ticket Service] 📥 Received event.created event:', data);
-            Ticket.create({eventId: data.id, ticketTypes: data.ticketTypes});
+            Ticket.create({eventId: new mongoose.Types.ObjectId(data.id), ticketTypes: data.ticketTypes});
             channel.ack(msg);
         }
     });

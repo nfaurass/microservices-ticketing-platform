@@ -18,6 +18,23 @@ export interface EventAttrs {
     ticketTypes: TicketType[];
 }
 
+const ticketSchema = new mongoose.Schema(
+    {
+        eventId: {type: mongoose.Schema.Types.ObjectId, ref: 'Event', required: true},
+        ticketTypes: [
+            {
+                name: {type: String, required: true},
+                price: {type: Number, required: true},
+                available: {type: Number, required: true},
+                description: {type: String}
+            }
+        ]
+    },
+    {timestamps: true}
+);
+
+export const Ticket = mongoose.model('Ticket', ticketSchema);
+
 const eventSchema = new mongoose.Schema(
     {
         title: {type: String, required: true},
@@ -28,5 +45,14 @@ const eventSchema = new mongoose.Schema(
     },
     {timestamps: true}
 );
+
+eventSchema.virtual('ticketTypes', {
+    ref: 'Ticket',
+    localField: '_id',
+    foreignField: 'eventId'
+});
+
+eventSchema.set('toObject', {virtuals: true});
+eventSchema.set('toJSON', {virtuals: true});
 
 export const Event = mongoose.model('Event', eventSchema);
