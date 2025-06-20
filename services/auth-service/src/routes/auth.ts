@@ -32,7 +32,7 @@ router.post('/api/auth/login', async (req, res) => {
 router.post('/api/auth/register', async (req, res) => {
     const {email, password, name, type} = req.body as RegisterUserAttrs;
     try {
-        const userExists = await Auth.exists({email, name, type});
+        const userExists = await Auth.exists({email});
         if (userExists) {
             res.status(400).json({message: 'User already exists'});
             return;
