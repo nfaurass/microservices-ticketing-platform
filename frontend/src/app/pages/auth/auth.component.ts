@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {AuthService} from '../../auth.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-auth',
@@ -26,13 +27,16 @@ export class AuthComponent {
     password: '',
   };
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private router: Router) {
   }
 
   onLogin() {
     console.log('Login Data:', this.loginData);
     this.authService.login(this.loginData.email, this.loginData.password).subscribe({
-      next: (res) => console.log('Login Success:', res),
+      next: (res) => {
+        console.log('Login Success:', res);
+        this.router.navigate(["/events"]);
+      },
       error: (err) => console.error('Login Error:', err)
     });
   }
@@ -40,7 +44,10 @@ export class AuthComponent {
   onRegister() {
     console.log('Register Data:', this.registerData);
     this.authService.register(this.registerData.email, this.registerData.password, this.registerData.name).subscribe({
-      next: (res) => console.log('Register Success:', res),
+      next: (res) => {
+        console.log('Register Success:', res);
+        this.router.navigate(["/events"]);
+      },
       error: (err) => console.error('Register Error:', err)
     });
   }
