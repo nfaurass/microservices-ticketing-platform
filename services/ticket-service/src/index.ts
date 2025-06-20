@@ -4,10 +4,12 @@ import mongoose from "mongoose";
 import {connectRabbitMQ} from "./rabbitmq/connection";
 import dotenv from "dotenv";
 import {ticketCreatedListener} from "./events/listener/EventCreatedListener";
+import cors from "cors";
 
 dotenv.config();
 
 const app = express();
+app.use(cors({}));
 app.use(express.json());
 app.use(ticketRouter);
 
