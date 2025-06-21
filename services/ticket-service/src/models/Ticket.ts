@@ -25,6 +25,17 @@ export interface TicketPurchasedAttr {
     quantity: string;
 }
 
+const eventSchema = new mongoose.Schema(
+    {
+        title: {type: String, required: true},
+        date: {type: String, required: true},
+        venue: {type: String, required: true},
+        description: {type: String, required: true},
+        imageUrl: {type: String, required: true},
+    },
+    {timestamps: true}
+);
+
 const ticketSchema = new mongoose.Schema(
     {
         eventId: {type: mongoose.Schema.Types.ObjectId, ref: 'Event', required: true},
@@ -58,5 +69,6 @@ const purchasedTicketSchema = new mongoose.Schema(
     {timestamps: true}
 );
 
+export const Event = mongoose.model('Event', eventSchema);
 export const PurchasedTicket = mongoose.model('PurchasedTicket', purchasedTicketSchema);
 export const Ticket = mongoose.model('Ticket', ticketSchema);
