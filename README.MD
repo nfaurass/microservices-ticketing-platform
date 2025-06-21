@@ -13,9 +13,9 @@ Managing ticket sales for popular events is challenging. Our app solves these co
 - **Dynamic Pricing**: Automatically adjusts ticket prices based on real-time demand (like airlines or Uber).
 - **Anti-Fraud Tickets**: QR-coded tickets are linked to buyers and validated during entry — reducing fake or reused
   tickets.
-- **Fast Performance at Scale**: Redis caching and Kafka event streaming ensure smooth operation even during high
+- **Fast Performance at Scale**: Redis caching and RabbitMQ event streaming ensure smooth operation even during high
   traffic.
-- **Real-Time Check-In**: Instant scanning and validation using a Kafka-based check-in pipeline.
+- **Real-Time Check-In**: Instant scanning and validation using a RabbitMQ-based check-in pipeline.
 
 ---
 
@@ -54,16 +54,13 @@ Managing ticket sales for popular events is challenging. Our app solves these co
 
 This project is built using **microservices**, each with a specific responsibility:
 
-| Service          | Responsibility                                                 |
-|------------------|----------------------------------------------------------------|
-| Auth Service     | User registration, login, JWT cookie-based sessions            |
-| Event Service    | Create and manage events, venue details, and scheduling        |
-| Ticket Service   | Purchase flow, ticket generation, QR code, seat availability   |
-| Check-In Service | Validate tickets and scan check-ins via Kafka events           |
-| Pricing Engine   | Adjust ticket pricing based on real-time demand (Kafka-driven) |
-
-Each service communicates via **GraphQL APIs** and **Kafka** for async messaging. **Redis** is used for caching
-frequently accessed data like seat availability and event listings.
+| Service          | Responsibility                                                    |
+|------------------|-------------------------------------------------------------------|
+| Auth Service     | User registration, login, JWT cookie-based sessions               |
+| Event Service    | Create and manage events, venue details, and scheduling           |
+| Ticket Service   | Purchase flow, ticket generation, QR code, seat availability      |
+| Check-In Service | Validate tickets and scan check-ins via RabbitMQ events           |
+| Pricing Engine   | Adjust ticket pricing based on real-time demand (RabbitMQ-driven) |
 
 ---
 
@@ -75,7 +72,7 @@ frequently accessed data like seat availability and event listings.
 | **GraphQL**       | API schema and service communication    |
 | **MongoDB**       | Data persistence per service            |
 | **Redis**         | In-memory caching and session storage   |
-| **Kafka**         | Event streaming between microservices   |
+| **RabbitMQ**      | Event streaming between microservices   |
 | **JWT + Cookies** | Secure user authentication              |
 
 ---
@@ -83,7 +80,7 @@ frequently accessed data like seat availability and event listings.
 ## Key Features
 
 - Real-time ticket availability with Redis caching
-- Demand-based ticket pricing with Kafka event tracking
+- Demand-based ticket pricing with RabbitMQ event tracking
 - Unique, non-transferable QR codes per ticket
 - Secure ticket transfers with verification
 - Real-time check-in and attendance monitoring
@@ -93,7 +90,7 @@ frequently accessed data like seat availability and event listings.
 ## DevOps & Scalability
 
 - Services are **containerized** for independent deployment.
-- Kafka allows **decoupled asynchronous workflows**.
+- RabbitMQ allows **decoupled asynchronous workflows**.
 - Redis enhances **performance and cache invalidation**.
 - Modular architecture enables **easy scaling** of high-traffic services like Ticketing or Check-In.
 
