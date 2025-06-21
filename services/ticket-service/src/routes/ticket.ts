@@ -42,4 +42,11 @@ router.post('/api/tickets/purchase/:eventId', async (req, res) => {
     res.status(201).send({message: `successfully purchased: ${eventId} - ${ticketType} - ${quantity}`});
 });
 
+router.get('/api/tickets/get', async (req, res) => {
+    const userId = "685588d619e74dae38321654";
+    const tickets = await PurchasedTicket.find({userId}).populate('eventId');
+    res.status(200).send(tickets);
+});
+
+
 export {router as ticketRouter};
