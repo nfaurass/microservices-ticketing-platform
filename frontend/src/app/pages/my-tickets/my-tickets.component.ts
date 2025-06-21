@@ -1,14 +1,29 @@
 import {Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {TicketService} from '../../tickets.service';
 
-interface Ticket {
-  id: string;
-  eventTitle: string;
-  eventDate: string;
+interface Event {
+  _id: string;
+  title: string;
+  date: string;
   venue: string;
+  description: string;
+  imageUrl: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PurchasedTicket {
+  _id: string;
+  userId: string;
+  eventId: Event;
   ticketType: string;
-  purchaseDate: string;
-  qrCodeUrl: string;
+  price: number;
+  qrCode: string;
+  status: 'active' | 'scanned' | 'cancelled';
+  checkInTime: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 @Component({
@@ -21,31 +36,23 @@ interface Ticket {
   styleUrl: './my-tickets.component.css'
 })
 export class MyTicketsComponent {
-  tickets: Ticket[] = [];
+  tickets: PurchasedTicket[] | null = null;
 
-  ngOnInit() {
-    this.tickets = [
-      {
-        id: 'tk1',
-        eventTitle: 'Summer Music Festival 2025',
-        eventDate: '2025-07-15',
-        venue: 'Central Park, NYC',
-        ticketType: 'VIP Pass',
-        purchaseDate: '2025-05-01',
-        qrCodeUrl:
-          'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=myticket1',
+  constructor(private ticketService: TicketService) {
+  }
+
+  ngOnInit(): void {
+    this.ticketService.getMyTickets().subscribe({
+      next: (data) => {
+        this.tickets = data.map(t => {
+          t.qrCode = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + t.qrCode;
+          return t;
+        });
       },
-      {
-        id: 'tk2',
-        eventTitle: 'Tech Conference 2025',
-        eventDate: '2025-09-10',
-        venue: 'Moscone Center, San Francisco',
-        ticketType: 'General Admission',
-        purchaseDate: '2025-05-12',
-        qrCodeUrl:
-          'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=myticket2',
-      },
-    ];
+      error: (err) => {
+        console.error('Error loading events', err);
+      }
+    });
   }
 
 }
