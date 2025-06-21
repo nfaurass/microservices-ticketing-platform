@@ -1,106 +1,138 @@
-<section
-  class="min-h-screen h-full bg-gradient-to-br from-white via-slate-100 to-slate-400 text-slate-900 flex flex-col font-sans">
-  <div
-    class="flex-1 h-full container mx-auto px-6 py-24 flex flex-col items-center justify-center text-center max-w-md">
+<section class="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 text-gray-900 flex flex-col font-sans">
+  <div class="flex-1 container mx-auto px-6 py-12 flex flex-col items-center justify-center">
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+      <div class="text-center mb-8">
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+          Welcome to EventHub
+        </h1>
+        <p class="text-gray-600">Manage your events seamlessly</p>
+      </div>
 
-    <h1 class="text-4xl md:text-5xl mb-8 font-semibold">
-      Welcome Back
-    </h1>
+      <div class="flex justify-center mb-8">
+        <div class="inline-flex bg-gray-100 p-1 rounded-lg">
+          <button
+            (click)="activeTab = 'login'"
+            [class]="activeTab === 'login'
+              ? 'bg-white text-indigo-600 shadow-sm'
+              : 'text-gray-600 hover:text-gray-800'"
+            class="px-6 py-2 rounded-md text-sm font-medium transition-all duration-200">
+            Login
+          </button>
+          <button
+            (click)="activeTab = 'register'"
+            [class]="activeTab === 'register'
+              ? 'bg-white text-indigo-600 shadow-sm'
+              : 'text-gray-600 hover:text-gray-800'"
+            class="px-6 py-2 rounded-md text-sm font-medium transition-all duration-200">
+            Register
+          </button>
+        </div>
+      </div>
 
-    <div class="flex justify-center mb-8 space-x-6 border-b border-slate-300">
-      <button (click)="activeTab = 'login'" [class.border-b-2]="activeTab === 'login'"
-              [class.border-slate-900]="activeTab === 'login'"
-              class="pb-2 text-lg cursor-pointer font-semibold hover:text-slate-700 transition">
-        Login
-      </button>
-      <button (click)="activeTab = 'register'" [class.border-b-2]="activeTab === 'register'"
-              [class.border-slate-900]="activeTab === 'register'"
-              class="pb-2 text-lg cursor-pointer font-semibold hover:text-slate-700 transition">
-        Register
-      </button>
+      <form *ngIf="activeTab === 'login'" class="space-y-5" (ngSubmit)="onLogin()">
+        <div>
+          <input type="email" placeholder="Email address"
+                 class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                 [(ngModel)]="loginData.email" name="loginEmail" required/>
+        </div>
+        <div>
+          <input type="password" placeholder="Password"
+                 class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                 [(ngModel)]="loginData.password" name="loginPassword" required/>
+        </div>
+
+        <div class="space-y-3">
+          <label class="block text-sm font-medium text-gray-700">I am a:</label>
+          <div class="grid grid-cols-3 gap-2">
+            <label class="flex items-center justify-center px-3 py-2 rounded-full border text-sm font-medium transition-all cursor-pointer"
+                   [ngClass]="{
+                    'bg-indigo-100 border-indigo-500 text-indigo-700': loginData.type === 'attendee',
+                    'border-gray-300 hover:bg-gray-50': loginData.type !== 'attendee'
+                  }">
+              <input type="radio" [(ngModel)]="loginData.type" name="loginType" value="attendee" class="sr-only"/>
+              Attendee
+            </label>
+            <label class="flex items-center justify-center px-3 py-2 rounded-full border text-sm font-medium transition-all cursor-pointer"
+                   [ngClass]="{
+                    'bg-indigo-100 border-indigo-500 text-indigo-700': loginData.type === 'organizer',
+                    'border-gray-300 hover:bg-gray-50': loginData.type !== 'organizer'
+                  }">
+              <input type="radio" [(ngModel)]="loginData.type" name="loginType" value="organizer" class="sr-only"/>
+              Organizer
+            </label>
+            <label class="flex items-center justify-center px-3 py-2 rounded-full border text-sm font-medium transition-all cursor-pointer"
+                   [ngClass]="{
+                    'bg-indigo-100 border-indigo-500 text-indigo-700': loginData.type === 'venue',
+                    'border-gray-300 hover:bg-gray-50': loginData.type !== 'venue'
+                  }">
+              <input type="radio" [(ngModel)]="loginData.type" name="loginType" value="venue" class="sr-only"/>
+              Venue
+            </label>
+          </div>
+        </div>
+
+        <button type="submit"
+                class="w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 transition duration-200 shadow-md hover:shadow-lg">
+          Continue
+        </button>
+      </form>
+
+      <form *ngIf="activeTab === 'register'" class="space-y-5" (ngSubmit)="onRegister()">
+        <div>
+          <input type="text" placeholder="Full name"
+                 class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                 [(ngModel)]="registerData.name" name="registerName" required/>
+        </div>
+        <div>
+          <input type="email" placeholder="Email address"
+                 class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                 [(ngModel)]="registerData.email" name="registerEmail" required/>
+        </div>
+        <div>
+          <input type="password" placeholder="Password"
+                 class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                 [(ngModel)]="registerData.password" name="registerPassword" required/>
+        </div>
+
+        <div class="space-y-3">
+          <label class="block text-sm font-medium text-gray-700">I am a:</label>
+          <div class="grid grid-cols-3 gap-2">
+            <label class="flex items-center justify-center px-3 py-2 rounded-full border text-sm font-medium transition-all cursor-pointer"
+                   [ngClass]="{
+                    'bg-indigo-100 border-indigo-500 text-indigo-700': registerData.type === 'attendee',
+                    'border-gray-300 hover:bg-gray-50': registerData.type !== 'attendee'
+                  }">
+              <input type="radio" [(ngModel)]="registerData.type" name="registerType" value="attendee" class="sr-only"/>
+              Attendee
+            </label>
+            <label class="flex items-center justify-center px-3 py-2 rounded-full border text-sm font-medium transition-all cursor-pointer"
+                   [ngClass]="{
+                    'bg-indigo-100 border-indigo-500 text-indigo-700': registerData.type === 'organizer',
+                    'border-gray-300 hover:bg-gray-50': registerData.type !== 'organizer'
+                  }">
+              <input type="radio" [(ngModel)]="registerData.type" name="registerType" value="organizer" class="sr-only"/>
+              Organizer
+            </label>
+            <label class="flex items-center justify-center px-3 py-2 rounded-full border text-sm font-medium transition-all cursor-pointer"
+                   [ngClass]="{
+                    'bg-indigo-100 border-indigo-500 text-indigo-700': registerData.type === 'venue',
+                    'border-gray-300 hover:bg-gray-50': registerData.type !== 'venue'
+                  }">
+              <input type="radio" [(ngModel)]="registerData.type" name="registerType" value="venue" class="sr-only"/>
+              Venue
+            </label>
+          </div>
+        </div>
+
+        <button type="submit"
+                class="w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 transition duration-200 shadow-md hover:shadow-lg">
+          Create Account
+        </button>
+      </form>
+
+      <div class="mt-6 text-center text-sm text-gray-500">
+        By continuing, you agree to our <a href="#" class="text-indigo-600 hover:underline">Terms</a> and <a href="#" class="text-indigo-600 hover:underline">Privacy Policy</a>.
+      </div>
     </div>
-
-    <form *ngIf="activeTab === 'login'" class="w-full space-y-6" (ngSubmit)="onLogin()">
-      <input type="email" placeholder="Email"
-             class="w-full p-3 rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-700"
-             [(ngModel)]="loginData.email" name="loginEmail" required/>
-      <input type="password" placeholder="Password"
-             class="w-full p-3 rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-700"
-             [(ngModel)]="loginData.password" name="loginPassword" required/>
-      <div class="flex flex-col items-start space-y-2">
-        <label class="font-semibold">Select Role:</label>
-        <div class="flex gap-3">
-          <label class="px-4 py-2 rounded-full border transition cursor-pointer"
-                 [ngClass]="{
-        'bg-slate-900 text-white border-slate-900': loginData.type === 'attendee',
-        'bg-white text-slate-900 border-slate-300 hover:bg-slate-100': loginData.type !== 'attendee' }">
-            <input type="radio" [(ngModel)]="loginData.type" name="loginType" value="attendee" class="sr-only"/>
-            Attendee
-          </label>
-          <label class="px-4 py-2 rounded-full border transition cursor-pointer"
-                 [ngClass]="{
-        'bg-slate-900 text-white border-slate-900': loginData.type === 'organizer',
-        'bg-white text-slate-900 border-slate-300 hover:bg-slate-100': loginData.type !== 'organizer'}">
-            <input type="radio" [(ngModel)]="loginData.type" name="loginType" value="organizer" class="sr-only"/>
-            Organizer
-          </label>
-          <label class="px-4 py-2 rounded-full border transition cursor-pointer"
-                 [ngClass]="{
-        'bg-slate-900 text-white border-slate-900': loginData.type === 'venue',
-        'bg-white text-slate-900 border-slate-300 hover:bg-slate-100': loginData.type !== 'venue'}">
-            <input type="radio" [(ngModel)]="loginData.type" name="loginType" value="venue" class="sr-only"/>
-            Venue
-          </label>
-        </div>
-      </div>
-      <button type="submit"
-              class="w-full bg-slate-900 text-white py-3 rounded-lg shadow-md hover:bg-slate-700 transition duration-300">
-        Login
-      </button>
-    </form>
-
-    <form *ngIf="activeTab === 'register'" class="w-full space-y-6" (ngSubmit)="onRegister()">
-      <input type="text" placeholder="Full Name"
-             class="w-full p-3 rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-700"
-             [(ngModel)]="registerData.name" name="registerName" required/>
-      <input type="email" placeholder="Email"
-             class="w-full p-3 rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-700"
-             [(ngModel)]="registerData.email" name="registerEmail" required/>
-      <input type="password" placeholder="Password"
-             class="w-full p-3 rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-700"
-             [(ngModel)]="registerData.password" name="registerPassword" required/>
-      <div class="flex flex-col items-start space-y-2">
-        <label class="font-semibold">Select Role:</label>
-        <div class="flex gap-3">
-          <label class="px-4 py-2 rounded-full border transition cursor-pointer"
-                 [ngClass]="{
-        'bg-slate-900 text-white border-slate-900': registerData.type === 'attendee',
-        'bg-white text-slate-900 border-slate-300 hover:bg-slate-100': registerData.type !== 'attendee' }">
-            <input type="radio" [(ngModel)]="registerData.type" name="loginType" value="attendee" class="sr-only"/>
-            Attendee
-          </label>
-          <label class="px-4 py-2 rounded-full border transition cursor-pointer"
-                 [ngClass]="{
-        'bg-slate-900 text-white border-slate-900': registerData.type === 'organizer',
-        'bg-white text-slate-900 border-slate-300 hover:bg-slate-100': registerData.type !== 'organizer'}">
-            <input type="radio" [(ngModel)]="registerData.type" name="loginType" value="organizer" class="sr-only"/>
-            Organizer
-          </label>
-          <label class="px-4 py-2 rounded-full border transition cursor-pointer"
-                 [ngClass]="{
-        'bg-slate-900 text-white border-slate-900': registerData.type === 'venue',
-        'bg-white text-slate-900 border-slate-300 hover:bg-slate-100': registerData.type !== 'venue'}">
-            <input type="radio" [(ngModel)]="registerData.type" name="loginType" value="venue" class="sr-only"/>
-            Venue
-          </label>
-        </div>
-      </div>
-      <button type="submit"
-              class="w-full bg-slate-900 text-white py-3 rounded-lg shadow-md hover:bg-slate-700 transition duration-300">
-        Register
-      </button>
-    </form>
-
   </div>
-
 </section>
