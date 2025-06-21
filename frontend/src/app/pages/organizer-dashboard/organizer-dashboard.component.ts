@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {CommonModule, DatePipe} from '@angular/common';
+import {RouterLink} from '@angular/router';
 
 interface EventSummary {
   id: string;
@@ -14,7 +15,8 @@ interface EventSummary {
   selector: 'app-organizer-dashboard',
   imports: [
     CommonModule,
-    DatePipe
+    DatePipe,
+    RouterLink
   ],
   templateUrl: './organizer-dashboard.component.html',
   standalone: true,

@@ -26,6 +26,23 @@ export interface Event {
   ticketTypes: Ticket[];
 }
 
+interface EventCreationTicketType {
+  id: string;
+  name: string;
+  price: number;
+  available: number;
+  description?: string;
+}
+
+export interface EventCreationEventAttrs {
+  title: string;
+  date: string;
+  venue: string;
+  description: string;
+  imageUrl: string;
+  ticketTypes: TicketType[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -41,5 +58,10 @@ export class EventsService {
 
   getEvent(eventId: string): Observable<Event> {
     return this.httpClient.get<Event>(this.API_URL + "/get/" + eventId);
+  }
+
+  createEvent(event: EventCreationEventAttrs): Observable<Event> {
+    console.log(JSON.stringify(event));
+    return this.httpClient.post<Event>(this.API_URL + "/create", event);
   }
 }
