@@ -13,17 +13,17 @@ app.use(cors({}));
 app.use(express.json());
 app.use(ticketRouter);
 
-const KAFKA_BROKER = process.env.KAFKA_BROKER;
+const RABBITMQ_HOST = process.env.RABBITMQ_HOST;
 const MONGO_URI = process.env.MONGO_URI;
 const PORT = process.env.PORT;
-if (!(PORT && KAFKA_BROKER && MONGO_URI)) process.exit(1);
+if (!(PORT && RABBITMQ_HOST && MONGO_URI)) process.exit(1);
 
 const start = async () => {
     try {
         await mongoose.connect(MONGO_URI + '/main');
         console.log('[Ticket Service] ✅ MongoDB connected');
 
-        await connectRabbitMQ(KAFKA_BROKER);
+        await connectRabbitMQ(RABBITMQ_HOST);
         await ticketCreatedListener();
 
         app.get("/", (req: Request, res: Response) => {
