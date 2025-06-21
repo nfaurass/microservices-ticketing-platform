@@ -19,6 +19,12 @@ export interface TicketAttrs {
     description?: string;
 }
 
+export interface TicketPurchasedAttr {
+    eventId: string;
+    ticketType: string,
+    quantity: string;
+}
+
 const ticketSchema = new mongoose.Schema(
     {
         eventId: {type: mongoose.Schema.Types.ObjectId, ref: 'Event', required: true},
