@@ -19,12 +19,14 @@ export class AuthComponent {
   loginData = {
     email: '',
     password: '',
+    type: 'attendee'
   };
 
   registerData = {
     name: '',
     email: '',
     password: '',
+    type: 'attendee'
   };
 
   constructor(private authService: AuthService, private router: Router) {
@@ -32,7 +34,7 @@ export class AuthComponent {
 
   onLogin() {
     console.log('Login Data:', this.loginData);
-    this.authService.login(this.loginData.email, this.loginData.password).subscribe({
+    this.authService.login(this.loginData.email, this.loginData.password, this.loginData.type).subscribe({
       next: (res) => {
         console.log('Login Success:', res);
         this.router.navigate(["/events"]);
@@ -43,7 +45,7 @@ export class AuthComponent {
 
   onRegister() {
     console.log('Register Data:', this.registerData);
-    this.authService.register(this.registerData.email, this.registerData.password, this.registerData.name).subscribe({
+    this.authService.register(this.registerData.email, this.registerData.password, this.registerData.name, this.registerData.type).subscribe({
       next: (res) => {
         console.log('Register Success:', res);
         this.router.navigate(["/events"]);

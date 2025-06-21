@@ -27,6 +27,32 @@
       <input type="password" placeholder="Password"
              class="w-full p-3 rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-700"
              [(ngModel)]="loginData.password" name="loginPassword" required/>
+      <div class="flex flex-col items-start space-y-2">
+        <label class="font-semibold">Select Role:</label>
+        <div class="flex gap-3">
+          <label class="px-4 py-2 rounded-full border transition cursor-pointer"
+                 [ngClass]="{
+        'bg-slate-900 text-white border-slate-900': loginData.type === 'attendee',
+        'bg-white text-slate-900 border-slate-300 hover:bg-slate-100': loginData.type !== 'attendee' }">
+            <input type="radio" [(ngModel)]="loginData.type" name="loginType" value="attendee" class="sr-only"/>
+            Attendee
+          </label>
+          <label class="px-4 py-2 rounded-full border transition cursor-pointer"
+                 [ngClass]="{
+        'bg-slate-900 text-white border-slate-900': loginData.type === 'organizer',
+        'bg-white text-slate-900 border-slate-300 hover:bg-slate-100': loginData.type !== 'organizer'}">
+            <input type="radio" [(ngModel)]="loginData.type" name="loginType" value="organizer" class="sr-only"/>
+            Organizer
+          </label>
+          <label class="px-4 py-2 rounded-full border transition cursor-pointer"
+                 [ngClass]="{
+        'bg-slate-900 text-white border-slate-900': loginData.type === 'venue',
+        'bg-white text-slate-900 border-slate-300 hover:bg-slate-100': loginData.type !== 'venue'}">
+            <input type="radio" [(ngModel)]="loginData.type" name="loginType" value="venue" class="sr-only"/>
+            Venue
+          </label>
+        </div>
+      </div>
       <button type="submit"
               class="w-full bg-slate-900 text-white py-3 rounded-lg shadow-md hover:bg-slate-700 transition duration-300">
         Login
@@ -43,6 +69,32 @@
       <input type="password" placeholder="Password"
              class="w-full p-3 rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-700"
              [(ngModel)]="registerData.password" name="registerPassword" required/>
+      <div class="flex flex-col items-start space-y-2">
+        <label class="font-semibold">Select Role:</label>
+        <div class="flex gap-3">
+          <label class="px-4 py-2 rounded-full border transition cursor-pointer"
+                 [ngClass]="{
+        'bg-slate-900 text-white border-slate-900': registerData.type === 'attendee',
+        'bg-white text-slate-900 border-slate-300 hover:bg-slate-100': registerData.type !== 'attendee' }">
+            <input type="radio" [(ngModel)]="registerData.type" name="loginType" value="attendee" class="sr-only"/>
+            Attendee
+          </label>
+          <label class="px-4 py-2 rounded-full border transition cursor-pointer"
+                 [ngClass]="{
+        'bg-slate-900 text-white border-slate-900': registerData.type === 'organizer',
+        'bg-white text-slate-900 border-slate-300 hover:bg-slate-100': registerData.type !== 'organizer'}">
+            <input type="radio" [(ngModel)]="registerData.type" name="loginType" value="organizer" class="sr-only"/>
+            Organizer
+          </label>
+          <label class="px-4 py-2 rounded-full border transition cursor-pointer"
+                 [ngClass]="{
+        'bg-slate-900 text-white border-slate-900': registerData.type === 'venue',
+        'bg-white text-slate-900 border-slate-300 hover:bg-slate-100': registerData.type !== 'venue'}">
+            <input type="radio" [(ngModel)]="registerData.type" name="loginType" value="venue" class="sr-only"/>
+            Venue
+          </label>
+        </div>
+      </div>
       <button type="submit"
               class="w-full bg-slate-900 text-white py-3 rounded-lg shadow-md hover:bg-slate-700 transition duration-300">
         Register

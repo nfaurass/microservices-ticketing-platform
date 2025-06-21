@@ -23,8 +23,8 @@ export class AuthService {
   constructor(private httpClient: HttpClient) {
   }
 
-  login(email: string, password: string): Observable<any> {
-    return this.httpClient.post(`${this.API_URL}/login`, {email, password}).pipe(
+  login(email: string, password: string, type: string): Observable<any> {
+    return this.httpClient.post(`${this.API_URL}/login`, {email, password, type}).pipe(
       tap((res: any) => {
         if (res.accessToken) {
           localStorage.setItem('accessToken', res.accessToken);
@@ -34,8 +34,8 @@ export class AuthService {
     );
   }
 
-  register(email: string, password: string, name: string): Observable<any> {
-    return this.httpClient.post(`${this.API_URL}/register`, {email, password, name}).pipe(
+  register(email: string, password: string, name: string, type: string): Observable<any> {
+    return this.httpClient.post(`${this.API_URL}/register`, {email, password, name, type}).pipe(
       tap((res: any) => {
         if (res.accessToken) {
           localStorage.setItem('accessToken', res.accessToken);
